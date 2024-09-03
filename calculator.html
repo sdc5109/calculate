@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>단가 계산기</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        label {
+            margin: 10px 0;
+            display: block;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h2>단가 계산기</h2>
+
+    <label for="strength">강도</label>
+    <select id="strength">
+        <option value="" disabled selected> </option>
+        <option value="25">강도25</option>
+        <option value="50">강도50</option>
+    </select>
+
+    <label for="adhension">접착여부</label>
+    <select id="adhension">
+        <option value="" disabled selected> </option>
+        <option value="0">비접착</option>
+        <option value="1">단면접착</option>
+        <option value="2">양면접착</option>
+    </select>
+
+    <label for="thickness">두께 (mm):</label>
+    <input type="number" id="thickness" placeholder="두께를 입력하세요" min="0" step="any">
+
+    <label for="width">폭 (mm):</label>
+    <input type="number" id="width" placeholder="폭을 입력하세요" min="0" step="any">
+    
+    <label for="length">길이 (mm):</label>
+    <input type="number" id="length" placeholder="두께를 입력하세요" min="0" step="any">
+    
+    <button onclick="calculateCost()">계산</button>
+    
+    <div class="result" id="result"></div>
+
+    <script>
+        function calculateCost() {
+            const adhension = document.getElementById('adhension').value;
+            const width = document.getElementById('width').value;
+            const length = document.getElementById('length').value;
+            const thickness = document.getElementById('thickness').value;
+            const strength = document.getElementById('strength').value;
+            
+            if(isNaN(adhension) || isNaN(width) || isNaN(length) || isNaN(thickness)|| isNaN(strength)) {
+                document.getElementById('result').innerText = "모든 값을 올바르게 입력해주세요.";
+                return;
+            }
+            
+            let cost = 0;
+            let adcost = 0;
+
+            // 수정구간
+            if(strength == '25'){
+                if(adhension == '0'){
+                    cost = (width * length * thickness / 1000000 * 1500)*1.1;
+                    cost = Math.ceil(cost/100)*100;
+                } else if(adhension == '1'){
+                    //cost = (width * length * thickness / 1000000 * 1500)*1.1;
+                    adcost = ((length * width / 1000000 * 2500)+(length * width * thickness / 1000000 * 1500))*1.1;
+                    cost = cost+adcost;
+                    cost = Math.ceil(cost/100)*100;
+                } else if(adhension == '2'){
+                    adcost = ((length * width / 1000000 * 5000)+(length * width * thickness / 1000000 * 1500))*1.1;
+                    cost = cost+adcost;
+                    cost = Math.ceil(cost/100)*100;
+                }
+            } else if (strength == '50'){
+                if(adhension == '0'){
+                    cost = (width * length * thickness / 1000000 * 2400)*1.1;
+                    cost = Math.ceil(cost/100)*100;
+                } else if(adhension == '1'){
+                    //cost = (width * length * thickness / 1000000 * 2400)*1.1;
+                    adcost = ((length * width / 1000000 * 2500)+(length * width * thickness / 1000000 * 2400))*1.1;
+                    cost = cost+adcost;
+                    alert(cost);
+                    cost = Math.ceil(cost/100)*100;
+                } else if(adhension == '2'){
+                    adcost = ((length * width / 1000000 * 5000)+(length * width * thickness / 1000000 * 2400))*1.1;
+                    cost = cost+adcost;
+                    cost = Math.ceil(cost/100)*100;
+                }
+            }
+
+            
+            //document.getElementById('result').innerText = "총 단가는: " + cost.toFixed(2) + "원 입니다.";
+            document.getElementById('result').innerText = "총 단가는: " + cost + "원 입니다.";
+        }
+    </script>
+</body>
+</html>
